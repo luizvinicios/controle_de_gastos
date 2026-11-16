@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Controle de Gastos | Painel</title>
+<link rel="stylesheet" href="/css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script type="module" src="/js/dashboard.js"></script>
+</head>
+<body class="dashboard">
+<aside class="sidebar">
+  <a class="brand" href="#dashboard"><span class="brand-icon">↗</span> Controle de Gastos</a>
+  <nav aria-label="Seções do painel">
+    <a href="#dashboard"><span>◈</span> Dashboard</a>
+    <a href="#extrato"><span>≡</span> Extrato Completo</a>
+    <a href="#categorias"><span>◇</span> Categorias</a>
+    <a href="#orcamentos"><span>◎</span> Orçamentos / Metas</a>
+  </nav>
+  <div class="account"><strong id="member"></strong><button type="button" id="logout">Sair da conta</button></div>
+</aside>
+<main>
+  <header class="top">
+    <div><p class="eyebrow">FINANÇAS PESSOAIS</p><h1 id="title">Dashboard</h1></div>
+    <div class="flex flex-wrap items-end gap-3">
+      <label>Mês de referência<input id="month" type="month" required></label>
+      <button type="button" class="primary" id="new">+ Novo lançamento <kbd>N</kbd></button>
+    </div>
+  </header>
+  <p id="notice" class="notice" role="status" hidden></p>
+  <section id="dashboard">
+    <div class="metrics grid gap-4">
+      <article class="card metric"><span class="metric-icon balance">◈</span><p>Saldo atual</p><strong id="balance">—</strong><small>Saldo acumulado</small></article>
+      <article class="card metric"><span class="metric-icon income">↗</span><p>Receitas do mês</p><strong id="income">—</strong><small>Entradas no período</small></article>
+      <article class="card metric"><span class="metric-icon expense">↘</span><p>Despesas do mês</p><strong id="expense">—</strong><small>Saídas no período</small></article>
+    </div>
+    <div class="charts grid gap-4">
+      <article class="card"><h2>Despesas por categoria</h2><p class="muted">Distribuição no mês selecionado</p><div class="chart"><canvas id="donut" role="img" aria-label="Despesas por categoria"></canvas><p id="donut-empty" class="empty">Nenhuma despesa neste mês.</p></div></article>
+      <article class="card"><h2>Receitas vs. despesas</h2><p class="muted">Evolução nos últimos seis meses</p><div class="chart"><canvas id="bars" role="img" aria-label="Comparativo mensal de receitas e despesas"></canvas></div></article>
+    </div>
+    <article class="card table-card"><div class="section-head"><h2>Lançamentos recentes</h2><a href="#extrato">Ver extrato →</a></div><div class="table-scroll"><table aria-label="Lançamentos recentes"><thead><tr><th>Descrição</th><th>Categoria</th><th>Data</th><th>Valor</th><th>Ações</th></tr></thead><tbody id="recent"></tbody></table></div></article>
+  </section>
+  <section id="extrato" hidden>
+    <article class="card table-card">
+      <form id="filters" class="filters flex flex-wrap gap-3">
+        <label>Buscar descrição<input name="busca" type="search" maxlength="180" placeholder="Ex. supermercado"></label>
+        <label>Tipo<select name="tipo"><option value="">Todos</option><option value="receita">Receitas</option><option value="despesa">Despesas</option></select></label>
+        <label>Categoria<select name="categoria" id="filter-category"><option value="">Todas</option></select></label>
+        <button class="secondary" type="submit">Filtrar</button>
+      </form>
+      <div class="table-scroll"><table aria-label="Extrato completo"><thead><tr><th>Descrição</th><th>Categoria</th><th>Data</th><th>Valor</th><th>Ações</th></tr></thead><tbody id="transactions"></tbody></table></div>
+    </article>
+  </section>
+  <section id="categorias" hidden>
+    <article class="card"><h2>Nova categoria</h2>
+      <form id="category-form" class="filters flex flex-wrap gap-3">
+        <label>Nome<input name="nome" maxlength="80" required></label>
+        <label>Tipo<select name="tipo"><option value="despesa">Despesa</option><option value="receita">Receita</option></select></label>
+        <label>Cor<input name="cor_hex" type="color" value="#7263d9"></label>
+        <button type="submit" class="primary">Criar categoria</button>
+      </form>
+    </article>
+    <div id="category-list" class="tiles grid gap-4"></div>
+  </section>
+  <section id="orcamentos" hidden>
+    <article class="card"><h2>Definir limite mensal</h2>
+      <form id="budget-form" class="filters flex flex-wrap gap-3">
+        <label>Categoria<select id="budget-category" name="categoria_id" required></select></label>
+        <label>Limite em R$<input name="limite_mensal" type="number" min="0.01" max="99999999.99" step="0.01" required></label>
+        <button type="submit" class="primary">Salvar limite</button>
+      </form>
+    </article>
+    <div id="budget-list" class="tiles grid gap-4"></div>
+  </section>
+</main>
+<dialog id="entry" aria-labelledby="entry-title">
+  <form id="entry-form">
+    <div class="section-head"><h2 id="entry-title">Novo lançamento</h2><button type="button" id="close-entry" class="secondary" aria-label="Fechar">×</button></div>
+    <label>Descrição<input name="descricao" maxlength="180" required autofocus></label>
+    <div class="grid grid-cols-2 gap-3">
+      <label>Valor em R$<input name="valor" type="number" min="0.01" max="99999999.99" step="0.01" required></label>
+      <label>Data<input name="data" type="date" min="1000-01-01" max="9999-12-31" required></label>
+      <label>Tipo<select name="tipo"><option value="despesa">Despesa</option><option value="receita">Receita</option></select></label>
+      <label>Categoria<select name="categoria_id" required></select></label>
+    </div>
+    <p id="entry-error" role="alert" class="error"></p>
+    <button type="submit" class="primary">Salvar lançamento</button>
+  </form>
+</dialog>
+</body>
+</html>

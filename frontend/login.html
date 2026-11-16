@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Controle de Gastos | Acesso</title>
+<link rel="stylesheet" href="/css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script type="module" src="/js/login.js"></script>
+</head>
+<body class="auth-page">
+  <div class="auth-layout">
+    <div class="auth-aside">
+      <div class="brand"><span class="brand-icon">↗</span> Controle de Gastos</div>
+      <div><p class="eyebrow">FINANÇAS PESSOAIS</p><h1>Seu dinheiro,<br>em perspectiva.</h1><p>Acompanhe receitas, despesas e limites mensais em um só lugar.</p></div>
+    </div>
+    <main class="auth-main">
+      <div class="auth-box">
+        <h2 id="auth-title">Entre na sua conta</h2>
+        <form id="auth-form">
+          <label id="name-field" hidden>Nome<input name="nome" maxlength="100" autocomplete="name"></label>
+          <label>E-mail<input name="email" type="email" maxlength="254" autocomplete="email" required></label>
+          <label>Senha<input name="senha" type="password" autocomplete="current-password" maxlength="72" required></label>
+          <p id="auth-error" role="alert" class="error"></p>
+          <button class="primary w-full" type="submit">Entrar</button>
+        </form>
+        <button id="switch-mode" class="toggle" type="button">Criar uma conta</button>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
